@@ -3,6 +3,8 @@ services:
   app:
     container_name: app
     restart: always
+    env_file:
+        - .env
     image: hanzkid/prasmul-be
     ports:
       - "3000:3000"
