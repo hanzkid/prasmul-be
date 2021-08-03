@@ -16,6 +16,12 @@ const server = new ApolloServer({
     resolvers: [courses.resolvers]
 });
 
+app.get('/', function (req, res) {
+    res.json({
+        message: 'Backend Test'
+    })
+})
+
 server.start().then(() => {
     server.applyMiddleware({ app });
     app.listen({ port: 3000, hostname: '0.0.0.0' }, () =>
