@@ -1,6 +1,7 @@
-const { gql } = require("apollo-server-express");
+const { gql, UserInputError } = require("apollo-server-express");
+const { InvalidObjectId } = require('./errorMessage');
 const Course = require('../models/courses')
-
+const ObjectId = require('mongoose').Types.ObjectId;
 const typeDefs = gql`
     type Course {
         id: String,
@@ -33,7 +34,10 @@ const getCourses = async() => {
 }
 
 const getCourse = async({ id }) => {
+    if(!ObjectId.isValid(id))
+        throw new UserInputError(InvalidObjectId)
     const course = await Course.findById(id);
+    
     return course
 }
 
@@ -43,6 +47,8 @@ const createCourse = async({ course }) => {
 }
 
 const updateCourse = async({ id, course }) => {
+    if(!ObjectId.isValid(id))
+        throw new UserInputError(InvalidObjectId)
     const courseData = await Course.findById(id)
     courseData.overwrite(course)
     await courseData.save()
@@ -50,6 +56,8 @@ const updateCourse = async({ id, course }) => {
 }
 
 const deleteCourse = async({ id }) => {
+    if(!ObjectId.isValid(id))
+        throw new UserInputError(InvalidObjectId)
     const courseData = await Course.findById(id)
     await courseData.delete()
     return 'success delete courses'
